@@ -2,15 +2,13 @@ package rg_examples;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import rafgfxlib.GameFrame;
 import rafgfxlib.Util;
 
-public class OurTile extends GameFrame
+public class BoomMe extends GameFrame
 {
 
     private static final int WINDOW_X = 900;
@@ -57,7 +55,7 @@ public class OurTile extends GameFrame
     private Tile[] tileset = new Tile[32];
     private int[][] tileMap = new int[mapW][mapH];
 
-    public OurTile()
+    public BoomMe()
     {
         super("RAF Tilemap", WINDOW_X, WINDOW_Y);
 
@@ -168,7 +166,7 @@ public class OurTile extends GameFrame
 
     public static void main(String[] args)
     {
-        GameFrame gf = new OurTile();
+        GameFrame gf = new BoomMe();
         gf.initGameWindow();
     }
 
