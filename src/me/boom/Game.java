@@ -30,9 +30,10 @@ public class Game extends GameFrame {
 
     private Particle[] parts = new Particle[PARTICLE_MAX];
 
-    private int [] aniX = {0, 2 ,-1 -3, 0, 1,-1,-3, 2};
-    private int [] aniY = {0, 1, -2, 0, 2,-1, 2, 1, 1};
+    private int [] aniX = {0, 2, -1, -3, 0, -2, 1, 3, 0};
+    private int [] aniY = {0, 1, -2, 0, 2,-1, 2, - 1,  -1};
     private int [] aniR = {0, 0, -1, 1, 0, 1,-1, 0,-1};
+    private int aniCount = 0;
 
 
     private BufferedImage background;
@@ -234,11 +235,17 @@ public class Game extends GameFrame {
                             countdownTile = new Tile("Tiles/number5.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "5");
                         }
                 }
+                if (numberToShow < 3  && explodeCountdown % 3 == 0) {
+                    bomb.setX(bomb.getX() + aniX[aniCount] * 2);
+                    bomb.setY(bomb.getY() + aniY[aniCount] * 2);
+                    aniCount++;
+                    if(aniCount == aniX.length) aniCount = 0;
+                }
                 if(explodeCountdown % 5 == 0) {
-                    countdownTile.setX(countdownTile.getX() - BOMB_CHANGING_FACTOR / 2);
-                    countdownTile.setY(countdownTile.getY() - BOMB_CHANGING_FACTOR / 2);
-                    countdownTile.setWidth(countdownTile.getWidth() + BOMB_CHANGING_FACTOR);
-                    countdownTile.setHeight(countdownTile.getHeight() + BOMB_CHANGING_FACTOR);
+                    countdownTile.setX(countdownTile.getX() - (BOMB_CHANGING_FACTOR/2) / 2);
+                    countdownTile.setY(countdownTile.getY() - (BOMB_CHANGING_FACTOR/2) / 2);
+                    countdownTile.setWidth(countdownTile.getWidth() + (BOMB_CHANGING_FACTOR/2));
+                    countdownTile.setHeight(countdownTile.getHeight() + (BOMB_CHANGING_FACTOR/2));
                 }
 
             }
