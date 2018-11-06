@@ -8,12 +8,17 @@ import java.util.ArrayList;
 
 public class Player extends Tile {
 
-    public final float DEFAULT_ROTATION_SPEED = 0.5f;
+    public static final float DEFAULT_ROTATION_SPEED = 0.215f;
+    public static final int LEFT_ROTATION_DIRECTION = 1;
+    public static final int RIGHT_ROTATION_DIRECTION = 2;
 
     private int defaultX;
     private int defaultY;
 
     private float rotationSpeed;
+    private float rotationAngle;
+    private boolean enabledRotation;
+    private int rotationDirection;
 
     private ArrayList<Tile> hearts;
 
@@ -23,7 +28,9 @@ public class Player extends Tile {
         super(fileName, x, y, width, height, "p");
         this.defaultX = x;
         this.defaultY = y;
-
+        this.rotationSpeed = DEFAULT_ROTATION_SPEED;
+        this.rotationAngle = 0;
+        this.enabledRotation = false;
         this.playerTransformation = new AffineTransform();
 
         this.hearts = new ArrayList<>();
@@ -58,6 +65,8 @@ public class Player extends Tile {
     private void checkDeath() {
         if(this.getY() > Game.getInstance().getHeight()) {
 
+            this.disableRotation();
+
             hearts.remove(hearts.size()-1);
 
             if(hearts.isEmpty()) {
@@ -71,14 +80,37 @@ public class Player extends Tile {
     private void updateTransformation() {
         playerTransformation.setToIdentity();
 
-        playerTransformation.translate(this.getX()+this.getWidth()/2, this.getY()+getHeight()/2);
-//        rotationRate+=Math.PI/2;
-//        playerTransformation.rotate(rotationRate);
-        playerTransformation.translate(-this.getWidth()/2, -this.getHeight()/2);
+        playerTransformation.translate(this.getX(), this.getY());
+
+        if(enabledRotation) {
+            playerTransformation.translate(this.getWidth()/2, this.getHeight()/2);
+
+            rotationAngle += rotationSpeed;
+            if(rotationDirection == LEFT_ROTATION_DIRECTION) {
+                rotationDirection = -rotationDirection;
+            }
+
+            playerTransformation.rotate(rotationAngle);
+            if(rotationSpeed>0) {
+                rotationSpeed -= 0.001;
+            }
+            else {
+                rotationSpeed=0;
+            }
+            playerTransformation.translate(-this.getWidth()/2, -this.getHeight()/2);
+
+        }
+
 
     }
 
-    public void setRotationSpeed(float rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
+    public void enableRotation(int leftOrRightDirection) {
+        this.enabledRotation = true;
+        this.rotationSpeed = DEFAULT_ROTATION_SPEED;
+        this.rotationDirection = leftOrRightDirection;
+    }
+
+    public void disableRotation() {
+        this.enabledRotation = false;
     }
 }

@@ -326,6 +326,7 @@ public class Game extends GameFrame {
         setAngle();
         setSpeed();
 
+        ((Player)player).enableRotation((getMouseX()>player.getX())?Player.LEFT_ROTATION_DIRECTION:Player.RIGHT_ROTATION_DIRECTION);
     }
 
     public void setAngle() {
@@ -455,6 +456,7 @@ public class Game extends GameFrame {
                     }
 
                     if (dX > 0 && dY > 0) {
+                        ((Player)player).disableRotation();
                         if (player.getY() + player.getHeight() <= t.getY()) {
                             speedX = 0;
                             speedY = 0;
