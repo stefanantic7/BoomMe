@@ -19,9 +19,8 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        bitMap = MapLoader.loadFromFile("maps/1.txt");
 
-        Game game = new Game(800, 640, bitMap);
+        Game game = Game.getInstance();
         game.initGameWindow();
     }
 }

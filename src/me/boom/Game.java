@@ -29,6 +29,9 @@ public class Game extends GameFrame {
 
 
 
+    private static Game instance;
+
+
     private BufferedImage background;
 
     private ArrayList<Tile> tiles;
@@ -51,7 +54,7 @@ public class Game extends GameFrame {
 
     private String[][] bitMap;
 
-    public Game(int sizeX, int sizeY, String[][] bitMap) {
+    protected Game(int sizeX, int sizeY, String[][] bitMap) {
         super("Boom Me", sizeX, sizeY);
 
         this.windowWidth = sizeX;
@@ -68,6 +71,20 @@ public class Game extends GameFrame {
 
     }
 
+    public static Game getInstance() {
+        if (instance == null) {
+            synchronized (Game.class) {
+                if(instance == null) {
+                    String[][] bitMap = MapLoader.loadFromFile("maps/1.txt");
+
+                    instance = new Game(800, 640, bitMap);
+                }
+            }
+        }
+
+        return instance;
+    }
+
     private void loadTiles() {
         int rows = bitMap.length;
         int columns = bitMap[0].length;
@@ -79,8 +96,8 @@ public class Game extends GameFrame {
 
 
                 if (bitMap[i][j].equals("#")) {
-                    Tile tile = new Tile("Tiles/" + "player" + ".png",
-                            j * width, i * height, width, height, "p");
+                    Tile tile = new Player("Tiles/" + "player" + ".png",
+                            j * width, i * height, width, height);
                     player = tile;
                 } else {
                     Tile tile = new Tile("Tiles/" + bitMap[i][j] + ".png",
@@ -124,6 +141,7 @@ public class Game extends GameFrame {
 
             g.drawLine((int)(p.posX - p.dX), (int)(p.posY - p.dY), (int)p.posX, (int)p.posY);
         }
+        player.render(g);
     }
 
     @Override
@@ -184,6 +202,8 @@ public class Game extends GameFrame {
 
         }
         handleMovement();
+        player.update();
+
     }
 
 
@@ -402,4 +422,5 @@ public class Game extends GameFrame {
         }
         return false;
     }
+
 }
