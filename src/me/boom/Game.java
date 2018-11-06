@@ -22,9 +22,14 @@ public class Game extends GameFrame {
     }
 
     private static final int PARTICLE_MAX = 350;
+    /** How much frames we need to wait to see sparks coming out of the bomb */
     private static final int BOMB_SLEEP = 20;
-    private static  int SLEEP_COUNT = 0;
+    /** How much we are waiting now */
+    private static int SLEEP_COUNT = 0;
+    /** Determinate whether bomb should increase or decrease it's size */
     private static boolean BOMB_GROWING = true;
+    /** How much we are increasing/decreasing bomb size*/
+    private static int BOMB_CHANGING_FACTOR = 2;
 
     private Particle[] parts = new Particle[PARTICLE_MAX];
 
@@ -167,21 +172,21 @@ public class Game extends GameFrame {
                 }
             }
 
-            if (bombCnt % 10 == 0) {
+            if (timeToChange(bombCnt)) {
                 if(BOMB_GROWING) {
-                    bomb.setHeight(bomb.getHeight() + 2);
-                    bomb.setWidth(bomb.getWidth() + 2);
-                    bomb.setX(bomb.getX() - 1);
-                    bomb.setY(bomb.getY() - 1);
+                    bomb.setHeight(bomb.getHeight() + BOMB_CHANGING_FACTOR);
+                    bomb.setWidth(bomb.getWidth() + BOMB_CHANGING_FACTOR);
+                    bomb.setX(bomb.getX() - BOMB_CHANGING_FACTOR / 2);
+                    bomb.setY(bomb.getY() - BOMB_CHANGING_FACTOR / 2);
                 } else {
-                    bomb.setHeight(bomb.getHeight() - 2);
-                    bomb.setWidth(bomb.getWidth() - 2);
-                    bomb.setX(bomb.getX() + 1);
-                    bomb.setY(bomb.getY() + 1);
+                    bomb.setHeight(bomb.getHeight() - BOMB_CHANGING_FACTOR);
+                    bomb.setWidth(bomb.getWidth() - BOMB_CHANGING_FACTOR);
+                    bomb.setX(bomb.getX() + BOMB_CHANGING_FACTOR / 2);
+                    bomb.setY(bomb.getY() + BOMB_CHANGING_FACTOR / 2);
                 }
             }
 
-            if(SLEEP_COUNT > BOMB_SLEEP){
+            if(timeToSpark()) {
                 genEx(bomb.getX() + bomb.getHeight() / 1.65f, bomb.getY(), 4.0f, bomb.getHeight() / 3, 3);
             }
         } else if (bomb != null) {
@@ -202,11 +207,27 @@ public class Game extends GameFrame {
             p.dY += 0.1f;
 
         }
+
         handleMovement();
         player.update();
-
     }
 
+    /**
+     * We are changing bomb size every 10th frame
+     * @param bombCnt - frame counter
+     * @return true if bomb needs to grow/decrease
+     */
+    private boolean timeToChange(int bombCnt) {
+        return bombCnt % 10 == 0;
+    }
+
+    /**
+     * Determinate whether we waited enough to see sparks.
+     * @return true if we did
+     */
+    private boolean timeToSpark() {
+        return SLEEP_COUNT > BOMB_SLEEP;
+    }
 
     private void genEx(float cX, float cY, float radius, int life, int count)
     {
@@ -302,10 +323,6 @@ public class Game extends GameFrame {
             player.setX((int) (player.getX() + dX));
             player.setY((int) (player.getY() + dY));
         }
-        //
-        //
-// }
-
     }
 
     private boolean handleColision(double dX, double dY) {
