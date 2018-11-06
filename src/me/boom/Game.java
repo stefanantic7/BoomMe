@@ -132,7 +132,6 @@ public class Game extends GameFrame {
         for (Tile tile : this.tiles) {
             g.drawImage(tile.getImage(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), null);
         }
-        g.drawImage(player.getImage(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), null);
         if (bomb != null) {
             g.drawImage(bomb.getImage(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getHeight(), null);
         }
