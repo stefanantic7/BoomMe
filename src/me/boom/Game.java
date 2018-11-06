@@ -5,6 +5,7 @@ import rafgfxlib.GameFrame;
 import rafgfxlib.Util;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -73,16 +74,15 @@ public class Game extends GameFrame {
 
                 if (bitMap[i][j].equals("#")) {
                     Tile tile = new Player("Tiles/" + "player" + ".png",
-                            j * width, i * height, width, height);
+                            j * width, i * height, width, height, 3);
                     player = tile;
                 } else {
-                    Tile tile = new Tile("Tiles/" + bitMap[i][j] + ".png",
-                            j * width, i * height, width, height, "");
-                    if (bitMap[i][j].equals("0"))
-                        tile.setType("0");
-                    else
-                        tile.setType("g");
-                    tiles.add(tile);
+
+                    if (!bitMap[i][j].equals("0")){
+                        Tile tile = new Tile("Tiles/" + bitMap[i][j] + ".png",
+                                j * width, i * height, width, height, "g");
+                        tiles.add(tile);
+                    }
                 }
             }
         }
@@ -334,6 +334,11 @@ public class Game extends GameFrame {
             }
         }
         return false;
+    }
+
+    public void closeGame() {
+        this.getWindow().dispatchEvent(new WindowEvent(this.getWindow(), WindowEvent.WINDOW_CLOSING));
+
     }
 
 }
