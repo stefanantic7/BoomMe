@@ -24,6 +24,7 @@ public class Tile
     {
         this.image = Util.loadImage(fileName);
 
+
         this.shape = new Rectangle(x, y, width, height);
 
         this.x = x;
