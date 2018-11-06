@@ -1,5 +1,6 @@
 package me.boom;
 
+import me.maps.MapLoader;
 import rafgfxlib.GameFrame;
 import rafgfxlib.Util;
 
