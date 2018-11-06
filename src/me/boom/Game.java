@@ -29,7 +29,7 @@ public class Game extends GameFrame {
     /** Determinate whether bomb should increase or decrease it's size */
     private static boolean BOMB_GROWING = true;
     /** How much we are increasing/decreasing bomb size*/
-    private static int BOMB_CHANGING_FACTOR = 2;
+    private static int BOMB_CHANGING_FACTOR = 5;
 
     private Particle[] parts = new Particle[PARTICLE_MAX];
 
