@@ -11,6 +11,24 @@ import java.util.Scanner;
 
 public class Game extends GameFrame {
 
+    public static class Particle
+    {
+        public float posX;
+        public float posY;
+        public float dX;
+        public float dY;
+        public int life = 0;
+    }
+
+    private static final int PARTICLE_MAX = 350;
+    private static final int BOMB_SLEEP = 20;
+    private static  int SLEEP_COUNT = 0;
+    private static boolean BOMB_GROWING = true;
+
+    private Particle[] parts = new Particle[PARTICLE_MAX];
+
+
+
     private BufferedImage background;
 
     private ArrayList<Tile> tiles;
@@ -25,6 +43,8 @@ public class Game extends GameFrame {
     private double radius = 10.0;
     private double gravity = -0.1;
 
+    private static int bombW = 50;
+    private static int bombH = 50;
 
     private int windowWidth;
     private int windowHeight;
@@ -40,6 +60,11 @@ public class Game extends GameFrame {
 
         this.tiles = new ArrayList<>();
         this.background = Util.loadImage("bg/BG.png");
+
+
+        for(int i = 0; i < PARTICLE_MAX; ++i)
+            parts[i] = new Particle();
+
 
     }
 
@@ -73,7 +98,6 @@ public class Game extends GameFrame {
     @Override
     public void handleWindowInit() {
         loadTiles();
-
         setUpdateRate(90);
         startThread();
     }
@@ -90,33 +114,97 @@ public class Game extends GameFrame {
             g.drawImage(bomb.getImage(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getHeight(), null);
         }
 
-//        g.setColor(Color.yellow);
-//        g.drawRect(selX * TILE_W / 4, selY * TILE_H / 4, TILE_W / 4, TILE_H / 4);
+
+        //varnice
+        g.setColor(Color.YELLOW);
+
+        for(Particle p : parts)
+        {
+            if(p.life <= 0) continue;
+
+            g.drawLine((int)(p.posX - p.dX), (int)(p.posY - p.dY), (int)p.posX, (int)p.posY);
+        }
     }
 
     @Override
     public void update() {
 
         // na klik se pojavljuje bomba
-
         if (isMouseButtonDown(GFMouseButton.Left)) {
             if (bomb == null) {
+                BOMB_GROWING = true;
                 bombCnt = 1;
-                bomb = new Tile("Tiles/Bomb.png", getMouseX(), getMouseY(), 30, 30, "b");
+                bomb = new Tile("Tiles/bomb.png", getMouseX() - bombW / 2, getMouseY() - bombH / 2, bombW, bombH, "b");
             }
+            SLEEP_COUNT++;
             bombCnt++;
-            if (bombCnt % 15 == 0) {
-                bomb.setHeight(bomb.getHeight() + 2);
-                bomb.setWidth(bomb.getWidth() + 2);
+
+            if(bombCnt > 100) {
+                bombCnt = 1;
+                if(BOMB_GROWING) {
+                    BOMB_GROWING = false;
+                } else {
+                    BOMB_GROWING = true;
+                }
+            }
+
+            if (bombCnt % 10 == 0) {
+                if(BOMB_GROWING) {
+                    bomb.setHeight(bomb.getHeight() + 2);
+                    bomb.setWidth(bomb.getWidth() + 2);
+                    bomb.setX(bomb.getX() - 1);
+                    bomb.setY(bomb.getY() - 1);
+                } else {
+                    bomb.setHeight(bomb.getHeight() - 2);
+                    bomb.setWidth(bomb.getWidth() - 2);
+                    bomb.setX(bomb.getX() + 1);
+                    bomb.setY(bomb.getY() + 1);
+                }
+            }
+
+            if(SLEEP_COUNT > BOMB_SLEEP){
+                genEx(bomb.getX() + bomb.getHeight() / 1.65f, bomb.getY(), 4.0f, bomb.getHeight() / 3, 3);
             }
         } else if (bomb != null) {
             handleBoom();
             bomb = null;
+            SLEEP_COUNT = 0;
         }
 
+        for(Particle p : parts)
+        {
+            if(p.life <= 0) continue;
+
+            p.life--;
+            p.posX += p.dX;
+            p.posY += p.dY;
+            p.dX *= 0.99f;
+            p.dY *= 0.99f;
+            p.dY += 0.1f;
+
+        }
         handleMovement();
+    }
 
 
+    private void genEx(float cX, float cY, float radius, int life, int count)
+    {
+        for(Particle p : parts)
+        {
+            if(p.life <= 0)
+            {
+                p.life = (int)(Math.random() * life * 0.5) + life / 2;
+                p.posX = cX;
+                p.posY = cY;
+                double angle = Math.random() * Math.PI * 2.0;
+                double speed = Math.random() * radius;
+                p.dX = (float)(Math.cos(angle) * speed);
+                p.dY = (float)(Math.sin(angle) * speed);
+
+                count--;
+                if(count <= 0) return;
+            }
+        }
     }
 
     @Override
@@ -158,7 +246,7 @@ public class Game extends GameFrame {
 
     public void setAngle() {
 
-        angle = Math.toDegrees(Math.atan2(player.getY() + (player.getHeight() / 2) - bomb.getY(), player.getX() + (player.getWidth() / 2) - bomb.getX()));
+        angle = Math.toDegrees(Math.atan2(player.getY() + (player.getHeight() / 2) - (bomb.getY() + bombH / 2), player.getX() + (player.getWidth() / 2) - (bomb.getX() + bombW / 2)));
 
         if (angle < 0)
             angle += 360;
@@ -176,11 +264,8 @@ public class Game extends GameFrame {
     }
 
     public void setSpeed() {
-
-        speedX = 7;
-        speedY = 7;
-
-
+        speedX = 10;
+        speedY = 10;
     }
 
     public void handleMovement() {
@@ -211,9 +296,9 @@ public class Game extends GameFrame {
 
                 Area temp = new Area(t.getShape());
                 if (temp.intersects((int) (player.getX() + dX), (int) (player.getY() + dY), player.getWidth(), player.getHeight())) {
-                    Scanner sc = new Scanner(System.in);
+//                    Scanner sc = new Scanner(System.in);
 //                    sc.next();
-                    System.out.println((player.getY() + " " + player.getX() + " " + t.getX() + " " + t.getY() + " " + t.getHeight() + " " + t.getWidth()));
+//                    System.out.println((player.getY() + " " + player.getX() + " " + t.getX() + " " + t.getY() + " " + t.getHeight() + " " + t.getWidth()));
 //
 //
 //
@@ -247,11 +332,11 @@ public class Game extends GameFrame {
 
                     if (dX < 0 && dY < 0) {
                         if (player.getY() <= t.getY() + t.getHeight()) {
-                            System.out.println("evo me preko dy > 0");
+//                            System.out.println("evo me preko dy > 0");
                             player.setX(t.getX() + t.getWidth() + 2);
                             angle = Math.PI - angle;
                         } else {
-                            System.out.println("evo me preko dy < 0");
+//                            System.out.println("evo me preko dy < 0");
                             player.setY(t.getY() + t.getHeight() + 2);
                             angle = 2 * Math.PI - angle;
                             gravity *= -1;
@@ -260,12 +345,12 @@ public class Game extends GameFrame {
 
                     if (dX > 0 && dY < 0) {
                         if (player.getY() <= t.getY() + t.getHeight()) {
-                            System.out.println("evo me preko dy > 0");
+//                            System.out.println("evo me preko dy > 0");
                             player.setX(t.getX() - t.getWidth());
                             angle = Math.PI - angle;
 
                         } else {
-                            System.out.println("evo me preko dy < 0");
+//                            System.out.println("evo me preko dy < 0");
                             player.setY(t.getY() + t.getHeight() + 2);
                             angle = 2 * Math.PI - angle;
                             gravity *= -1;
@@ -277,11 +362,11 @@ public class Game extends GameFrame {
                         if (player.getY() + player.getHeight() <= t.getY()) {
                             speedX = 0;
                             speedY = 0;
-                            System.out.println("evo me preko dy > 0");
+//                            System.out.println("evo me preko dy > 0");
                             player.setY(t.getY() - player.getHeight() - 2);
                             angle = Math.PI - angle;
                         } else {
-                            System.out.println("evo me preko dy < 0");
+//                            System.out.println("evo me preko dy < 0");
 //                            player.setX(t.getX() + t.getWidth() + 2);
                             angle = 2 * Math.PI - angle;
                             gravity *= -1;
@@ -293,12 +378,12 @@ public class Game extends GameFrame {
                         if (player.getY() + player.getHeight() <= t.getY()) {
                             speedX = 0;
                             speedY = 0;
-                            System.out.println("evo me preko dy > 0");
+//                            System.out.println("evo me preko dy > 0");
                             player.setY(t.getY() - player.getHeight() - 2);
                             angle = Math.PI - angle;
                         } else {
 
-                            System.out.println("evo me preko dy < 0");
+//                            System.out.println("evo me preko dy < 0");
                             player.setX(t.getX() - player.getWidth() - 4);
                             angle = 2 * Math.PI - angle;
                             gravity *= -1;
@@ -307,7 +392,7 @@ public class Game extends GameFrame {
                     }
 
                     if(speedX > 0)
-                        speedX -= 0.3;
+                        speedX *= 0.2;
 
                     speedY += gravity;
 

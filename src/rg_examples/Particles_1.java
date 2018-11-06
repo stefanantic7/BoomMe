@@ -18,7 +18,7 @@ public class Particles_1 extends GameFrame
 		public int life = 0;
 	}
 	
-	private static final int PARTICLE_MAX = 1000;
+	private static final int PARTICLE_MAX = 350;
 	
 	private Particle[] parts = new Particle[PARTICLE_MAX];
 
@@ -57,7 +57,7 @@ public class Particles_1 extends GameFrame
 	public void update()
 	{
 		if(isMouseButtonDown(GFMouseButton.Right))
-			genEx(getMouseX(), getMouseY(), 3.0f, 200, 3);
+			genEx(getMouseX(), getMouseY(), 4.0f, 200, 3);
 		
 		for(Particle p : parts)
 		{
