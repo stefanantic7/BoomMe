@@ -93,4 +93,12 @@ public class Tile
     public void setShape(Shape shape) {
         this.shape = shape;
     }
+
+    public void render(Graphics2D g) {
+
+    }
+
+    public void update() {
+
+    }
 }

@@ -1,5 +1,6 @@
 package me.boom;
 
+import me.maps.MapLoader;
 import rafgfxlib.GameFrame;
 import rafgfxlib.Util;
 
@@ -10,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game extends GameFrame {
+
+    private static Game instance;
+
 
     private BufferedImage background;
 
@@ -31,7 +35,7 @@ public class Game extends GameFrame {
 
     private String[][] bitMap;
 
-    public Game(int sizeX, int sizeY, String[][] bitMap) {
+    protected Game(int sizeX, int sizeY, String[][] bitMap) {
         super("Boom Me", sizeX, sizeY);
 
         this.windowWidth = sizeX;
@@ -41,6 +45,20 @@ public class Game extends GameFrame {
         this.tiles = new ArrayList<>();
         this.background = Util.loadImage("bg/BG.png");
 
+    }
+
+    public static Game getInstance() {
+        if (instance == null) {
+            synchronized (Game.class) {
+                if(instance == null) {
+                    String[][] bitMap = MapLoader.loadFromFile("maps/1.txt");
+
+                    instance = new Game(800, 640, bitMap);
+                }
+            }
+        }
+
+        return instance;
     }
 
     private void loadTiles() {
@@ -54,8 +72,8 @@ public class Game extends GameFrame {
 
 
                 if (bitMap[i][j].equals("#")) {
-                    Tile tile = new Tile("Tiles/" + "player" + ".png",
-                            j * width, i * height, width, height, "p");
+                    Tile tile = new Player("Tiles/" + "player" + ".png",
+                            j * width, i * height, width, height);
                     player = tile;
                 } else {
                     Tile tile = new Tile("Tiles/" + bitMap[i][j] + ".png",
@@ -90,8 +108,7 @@ public class Game extends GameFrame {
             g.drawImage(bomb.getImage(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getHeight(), null);
         }
 
-//        g.setColor(Color.yellow);
-//        g.drawRect(selX * TILE_W / 4, selY * TILE_H / 4, TILE_W / 4, TILE_H / 4);
+        player.render(g);
     }
 
     @Override
@@ -116,6 +133,7 @@ public class Game extends GameFrame {
 
         handleMovement();
 
+        player.update();
 
     }
 
@@ -317,4 +335,5 @@ public class Game extends GameFrame {
         }
         return false;
     }
+
 }
