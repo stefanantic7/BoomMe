@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class Game extends GameFrame {
 
+    private static final int UPDATE_RATE = 90;
     public static class Particle
     {
         public float posX;
@@ -31,8 +32,8 @@ public class Game extends GameFrame {
     private Particle[] parts = new Particle[PARTICLE_MAX];
 
     private int [] aniX = {0, 2, -1, -3, 0, -2, 1, 3, 0};
-    private int [] aniY = {0, 1, -2, 0, 2,-1, 2, - 1,  -1};
-    private int [] aniR = {0, 0, -1, 1, 0, 1,-1, 0,-1};
+    private int [] aniY = {0, 1, -2, -1, 2,-1, 2, 0, -1};
+    private int [] aniR = {0, 0, -1, 1, 0, 1,-1, 0, -1};
     private int aniCount = 0;
 
 
@@ -60,8 +61,8 @@ public class Game extends GameFrame {
 
     private static int scalingFactor = 3;
 
-    private static int explodeCountdown = 300;
-    private static int explodeLimit = 300;
+    private static int explodeCountdown;
+    private static int explodeCountdownStart;
 
     private int windowWidth;
     private int windowHeight;
@@ -82,7 +83,7 @@ public class Game extends GameFrame {
         for(int i = 0; i < PARTICLE_MAX; ++i)
             parts[i] = new Particle();
 
-
+        explodeCountdown = explodeCountdownStart = UPDATE_RATE * 5;
     }
 
     public static Game getInstance() {
@@ -128,7 +129,7 @@ public class Game extends GameFrame {
     @Override
     public void handleWindowInit() {
         loadTiles();
-        setUpdateRate(90);
+        setUpdateRate(UPDATE_RATE);
         startThread();
     }
 
@@ -142,7 +143,7 @@ public class Game extends GameFrame {
         g.drawImage(player.getImage(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), null);
         if (bomb != null) {
             g.drawImage(bomb.getImage(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getHeight(), null);
-            if(explodeCountdown < explodeLimit){
+            if(explodeCountdown < explodeCountdownStart){
                 g.drawImage(countdownTile.getImage(), countdownTile.getX(), countdownTile.getY(), countdownTile.getWidth(), countdownTile.getHeight(), null);
             }
         }
@@ -202,30 +203,48 @@ public class Game extends GameFrame {
             if(explodeCountdown == 0) {
                 handleBoom();
                 bomb = null;
-                explodeCountdown = explodeLimit;
+                explodeCountdown = explodeCountdownStart;
             } else {
-                int numberToShow = explodeCountdown / 60;
-                int countdownTileX = getX() + getWidth() / 2 - bomb.getWidth()/(2*scalingFactor) ;
-                int countdownTileY = getY()+ getHeight()/ 2 - bomb.getHeight()/(2*scalingFactor);
-                int countdownTileW = bomb.getWidth()/scalingFactor;
-                int countdownTileH = bomb.getHeight()/scalingFactor;
-                switch (numberToShow) {
-                    case 0:
+                int currentNumber = explodeCountdown / UPDATE_RATE + 1;
+                int countdownTileW = (int)(bomb.getWidth() * 0.3);
+                int countdownTileH = (int)(bomb.getHeight() * 0.3);
+                int countdownTileX = bomb.getX() + bomb.getWidth() / 2 - countdownTileW ;
+                int countdownTileY = bomb.getY()+ bomb.getHeight() / 2 - countdownTileH;
+                switch (currentNumber) {
+                    case 1:
                         if(countdownTile == null || !countdownTile.getType().equals("1")) {
                             countdownTile = new Tile("Tiles/number1.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "1");
                         }
-                        break;
-                    case 1:
-                        if(countdownTile == null || !countdownTile.getType().equals("2")) {
-                            countdownTile = new Tile("Tiles/number2.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "2");
+                        if (explodeCountdown % 2 == 0) {
+                            bomb.setX(bomb.getX() + aniX[aniCount] * 1);
+                            bomb.setY(bomb.getY() + aniY[aniCount] * 1);
+                            aniCount++;
+                            if(aniCount == aniX.length) aniCount = 0;
                         }
                         break;
                     case 2:
-                        if(countdownTile == null || !countdownTile.getType().equals("3")) {
-                            countdownTile = new Tile("Tiles/number3.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "3");
+                        if(countdownTile == null || !countdownTile.getType().equals("2")) {
+                            countdownTile = new Tile("Tiles/number2.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "2");
+                        }
+                        if (explodeCountdown % 3 == 0) {
+                            bomb.setX(bomb.getX() + aniX[aniCount] * 1);
+                            bomb.setY(bomb.getY() + aniY[aniCount] * 1);
+                            aniCount++;
+                            if(aniCount == aniX.length) aniCount = 0;
                         }
                         break;
                     case 3:
+                        if(countdownTile == null || !countdownTile.getType().equals("3")) {
+                            countdownTile = new Tile("Tiles/number3.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "3");
+                        }
+                        if (explodeCountdown % 4 == 0) {
+                            bomb.setX(bomb.getX() + aniX[aniCount] * 2);
+                            bomb.setY(bomb.getY() + aniY[aniCount] * 2);
+                            aniCount++;
+                            if(aniCount == aniX.length) aniCount = 0;
+                        }
+                        break;
+                    case 4:
                         if(countdownTile == null || !countdownTile.getType().equals("4")) {
                             countdownTile = new Tile("Tiles/number4.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "4");
                         }
@@ -235,19 +254,13 @@ public class Game extends GameFrame {
                             countdownTile = new Tile("Tiles/number5.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "5");
                         }
                 }
-                if (numberToShow < 3  && explodeCountdown % 3 == 0) {
-                    bomb.setX(bomb.getX() + aniX[aniCount] * 2);
-                    bomb.setY(bomb.getY() + aniY[aniCount] * 2);
-                    aniCount++;
-                    if(aniCount == aniX.length) aniCount = 0;
-                }
-                if(explodeCountdown % 5 == 0) {
-                    countdownTile.setX(countdownTile.getX() - (BOMB_CHANGING_FACTOR/2) / 2);
-                    countdownTile.setY(countdownTile.getY() - (BOMB_CHANGING_FACTOR/2) / 2);
-                    countdownTile.setWidth(countdownTile.getWidth() + (BOMB_CHANGING_FACTOR/2));
-                    countdownTile.setHeight(countdownTile.getHeight() + (BOMB_CHANGING_FACTOR/2));
-                }
 
+                if(explodeCountdown % 3 == 0) {
+                    countdownTile.setWidth(countdownTile.getWidth() + 1);
+                    countdownTile.setHeight(countdownTile.getHeight() + 1);
+                    countdownTile.setX(bomb.getX() + bomb.getWidth() / 2 - countdownTile.getWidth() / 2);
+                    countdownTile.setY(bomb.getY() + bomb.getHeight() / 2 - countdownTile.getHeight() /2);
+                }
             }
         }
 
