@@ -20,6 +20,8 @@ public class Player extends Tile {
     private boolean enabledRotation;
     private int rotationDirection;
 
+    private boolean isDeath;
+
     private ArrayList<Tile> hearts;
 
     private AffineTransform playerTransformation;
@@ -31,6 +33,7 @@ public class Player extends Tile {
         this.rotationSpeed = DEFAULT_ROTATION_SPEED;
         this.rotationAngle = 0;
         this.enabledRotation = false;
+        this.isDeath = false;
         this.playerTransformation = new AffineTransform();
 
         this.hearts = new ArrayList<>();
@@ -55,7 +58,6 @@ public class Player extends Tile {
         }
 
 
-
         g.drawImage(this.getImage().getScaledInstance(this.getWidth(),this.getHeight(),Image.SCALE_DEFAULT), playerTransformation, null);
 //        g.drawImage(this.getImage(), this.getX(), this.getY(), this.getWidth(), this.getHeight(), null);
 
@@ -70,7 +72,7 @@ public class Player extends Tile {
             hearts.remove(hearts.size()-1);
 
             if(hearts.isEmpty()) {
-                Game.getInstance().closeGame();
+                isDeath = true;
             }
             this.setX(defaultX);
             this.setY(defaultY);
@@ -86,11 +88,12 @@ public class Player extends Tile {
             playerTransformation.translate(this.getWidth()/2, this.getHeight()/2);
 
             rotationAngle += rotationSpeed;
+            float rotationAngleDirection = rotationAngle;
             if(rotationDirection == LEFT_ROTATION_DIRECTION) {
-                rotationDirection = -rotationDirection;
+                rotationAngleDirection = (-1)*rotationAngle;
             }
 
-            playerTransformation.rotate(rotationAngle);
+            playerTransformation.rotate(rotationAngleDirection);
             if(rotationSpeed>0) {
                 rotationSpeed -= 0.001;
             }
@@ -112,5 +115,9 @@ public class Player extends Tile {
 
     public void disableRotation() {
         this.enabledRotation = false;
+    }
+
+    public boolean isDeath() {
+        return isDeath;
     }
 }

@@ -60,6 +60,9 @@ public class Game extends GameFrame {
 
     private static int scalingFactor = 3;
 
+    private BufferedImage deathFrame = null;
+    private ArrayList<DeathFrameTile> deathFrameTiles = new ArrayList<>();
+
     private int windowWidth;
     private int windowHeight;
 
@@ -106,7 +109,7 @@ public class Game extends GameFrame {
 
                 if (bitMap[i][j].equals("#")) {
                     Tile tile = new Player("Tiles/" + "player" + ".png",
-                            j * width, i * height, width, height, 3);
+                            j * width, i * height, width, height, 1);
                     player = tile;
                 } else {
 
@@ -129,6 +132,28 @@ public class Game extends GameFrame {
 
     @Override
     public void render(Graphics2D g, int i, int i1) {
+
+        if(((Player)player).isDeath()) {
+
+            //Initialize death frame and draw last image from window on it.
+            if(deathFrame == null) {
+                deathFrame = new BufferedImage(getWidth(),getHeight(), BufferedImage.TYPE_INT_ARGB);
+                g = deathFrame.createGraphics();
+                renderGraphics(g);
+            }
+
+            for (DeathFrameTile deathFrameTile:deathFrameTiles) {
+                deathFrameTile.render(g);
+            }
+
+        }
+        else {
+            renderGraphics(g);
+        }
+
+    }
+
+    private void renderGraphics(Graphics2D g) {
         g.drawImage(background, 0, 0, null);
 
         for (Tile tile : this.tiles) {
@@ -164,60 +189,94 @@ public class Game extends GameFrame {
     @Override
     public void update() {
 
-        // na klik se pojavljuje bomba
-        if (isMouseButtonDown(GFMouseButton.Left)) {
-            if (bomb == null) {
-                BOMB_GROWING = true;
-                BOMB_CHANGING_COUNT = 1;
-                bomb = new Tile("Tiles/bomb.png",getMouseX() - DEFAULT_BOMB_WIDTH / 2,getMouseY() - DEFAULT_BOMB_HEIGHT / 2, DEFAULT_BOMB_WIDTH, DEFAULT_BOMB_HEIGHT, "b");
-                bombX = getMouseX();
-                bombY = getMouseY();
-            }
-            BOMB_CHANGING_COUNT++;
-
-            if(BOMB_CHANGING_COUNT > BOMB_CHANGING_LIMIT) {
-                BOMB_CHANGING_COUNT = 1;
-                if(BOMB_GROWING) {
-                    BOMB_GROWING = false;
-                } else {
+        if(((Player)player).isDeath()) {
+            runDeathAnimation();
+        }
+        else {
+            // na klik se pojavljuje bomba
+            if (isMouseButtonDown(GFMouseButton.Left)) {
+                if (bomb == null) {
                     BOMB_GROWING = true;
+                    BOMB_CHANGING_COUNT = 1;
+                    bomb = new Tile("Tiles/bomb.png",getMouseX() - DEFAULT_BOMB_WIDTH / 2,getMouseY() - DEFAULT_BOMB_HEIGHT / 2, DEFAULT_BOMB_WIDTH, DEFAULT_BOMB_HEIGHT, "b");
+                    bombX = getMouseX();
+                    bombY = getMouseY();
                 }
-            }
+                BOMB_CHANGING_COUNT++;
 
-            if (timeToChange(BOMB_CHANGING_COUNT)) {
-                if(BOMB_GROWING) {
-                    bomb.setHeight(bomb.getHeight() + BOMB_CHANGING_FACTOR);
-                    bomb.setWidth(bomb.getWidth() + BOMB_CHANGING_FACTOR);
-                    bomb.setX(bomb.getX() - BOMB_CHANGING_FACTOR / 2);
-                    bomb.setY(bomb.getY() - BOMB_CHANGING_FACTOR / 2);
+                if(BOMB_CHANGING_COUNT > BOMB_CHANGING_LIMIT) {
+                    BOMB_CHANGING_COUNT = 1;
+                    if(BOMB_GROWING) {
+                        BOMB_GROWING = false;
+                    } else {
+                        BOMB_GROWING = true;
+                    }
+                }
+
+                if (timeToChange(BOMB_CHANGING_COUNT)) {
+                    if(BOMB_GROWING) {
+                        bomb.setHeight(bomb.getHeight() + BOMB_CHANGING_FACTOR);
+                        bomb.setWidth(bomb.getWidth() + BOMB_CHANGING_FACTOR);
+                        bomb.setX(bomb.getX() - BOMB_CHANGING_FACTOR / 2);
+                        bomb.setY(bomb.getY() - BOMB_CHANGING_FACTOR / 2);
+                    } else {
+                        bomb.setHeight(bomb.getHeight() - BOMB_CHANGING_FACTOR);
+                        bomb.setWidth(bomb.getWidth() - BOMB_CHANGING_FACTOR);
+                        bomb.setX(bomb.getX() + BOMB_CHANGING_FACTOR / 2);
+                        bomb.setY(bomb.getY() + BOMB_CHANGING_FACTOR / 2);
+                    }
+                }
+
+
+            } else if (bomb != null) {
+                EXPLODE_COUNTDOWN--;
+                generateSparks(bomb.getX() + bomb.getHeight() / 1.65f, bomb.getY(), 4.0f, bomb.getHeight() / 4, 8 - EXPLODE_COUNTDOWN / UPDATE_RATE );
+                if(timeToExplode()) {
+                    handleBoom();
                 } else {
-                    bomb.setHeight(bomb.getHeight() - BOMB_CHANGING_FACTOR);
-                    bomb.setWidth(bomb.getWidth() - BOMB_CHANGING_FACTOR);
-                    bomb.setX(bomb.getX() + BOMB_CHANGING_FACTOR / 2);
-                    bomb.setY(bomb.getY() + BOMB_CHANGING_FACTOR / 2);
+                    handleCountdown();
                 }
             }
 
-
-        } else if (bomb != null) {
-            EXPLODE_COUNTDOWN--;
-            generateSparks(bomb.getX() + bomb.getHeight() / 1.65f, bomb.getY(), 4.0f, bomb.getHeight() / 4, 8 - EXPLODE_COUNTDOWN / UPDATE_RATE );
-            if(timeToExplode()) {
-                handleBoom();
-            } else {
-                handleCountdown();
+            for(Spark spark : sparks) {
+                spark.update();
             }
+
+            handleMovement();
+
+            player.update();
         }
-
-        for(Spark spark : sparks) {
-             spark.update();
-        }
-
-        handleMovement();
-
-        player.update();
     }
 
+    private void runDeathAnimation() {
+        if(deathFrameTiles.isEmpty()) {
+
+            for(int y=0;y<(getHeight()/DeathFrameTile.HEIGHT);y++) {
+                for(int x=0;x<(getWidth()/DeathFrameTile.WIDTH);x++ ) {
+
+                    int posX = Math.abs((x*DeathFrameTile.WIDTH));
+                    int posY = Math.abs((y*DeathFrameTile.HEIGHT));
+
+                    BufferedImage bi = deathFrame.getSubimage(posX, posY, DeathFrameTile.WIDTH, DeathFrameTile.HEIGHT);
+                    deathFrameTiles.add(new DeathFrameTile(bi, posX,posY));
+                }
+            }
+        }
+        else {
+            boolean aboveLine = false;
+            for (DeathFrameTile deathFrameTile:deathFrameTiles) {
+                if(deathFrameTile.getY()<getHeight()) {
+                    aboveLine = true;
+                }
+            }
+            if(!aboveLine) {
+                closeGame();
+            }
+            for (DeathFrameTile deathFrameTile:deathFrameTiles) {
+                deathFrameTile.update();
+            }
+        }
+    }
 
     private boolean timeToExplode() {
         return EXPLODE_COUNTDOWN == 0;
