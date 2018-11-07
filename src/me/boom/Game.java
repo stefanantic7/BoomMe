@@ -140,7 +140,6 @@ public class Game extends GameFrame {
         for (Tile tile : this.tiles) {
             g.drawImage(tile.getImage(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), null);
         }
-        g.drawImage(player.getImage(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), null);
         if (bomb != null) {
             g.drawImage(bomb.getImage(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getHeight(), null);
             if(explodeCountdown < explodeCountdownStart){
@@ -347,6 +346,7 @@ public class Game extends GameFrame {
         setAngle();
         setSpeed();
 
+        ((Player)player).enableRotation((getMouseX()>player.getX())?Player.LEFT_ROTATION_DIRECTION:Player.RIGHT_ROTATION_DIRECTION);
     }
 
     public void setAngle() {
@@ -476,6 +476,7 @@ public class Game extends GameFrame {
                     }
 
                     if (dX > 0 && dY > 0) {
+                        ((Player)player).disableRotation();
                         if (player.getY() + player.getHeight() <= t.getY()) {
                             speedX = 0;
                             speedY = 0;
