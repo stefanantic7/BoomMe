@@ -12,38 +12,43 @@ import java.util.ArrayList;
 
 public class Game extends GameFrame {
 
-    public static class Particle
-    {
-        public float posX;
-        public float posY;
-        public float dX;
-        public float dY;
-        public int life = 0;
-    }
+    private static final int UPDATE_RATE = 90;
 
-    private static final int PARTICLE_MAX = 350;
+
+    private static final int SPARKS_MAX = 350;
+
+    private static int DEFAULT_BOMB_WIDTH = 30;
+    private static int DEFAULT_BOMB_HEIGHT = 30;
     /** Determinate whether bomb should increase or decrease it's size */
     private static boolean BOMB_GROWING = true;
-    /** How much we are increasing/decreasing bomb size*/
+    /** How much we are increasing/decreasing bomb size */
     private static int BOMB_CHANGING_FACTOR = 10;
     private static int BOMB_CHANGING_LIMIT = 50;
+    private static int BOMB_CHANGING_COUNT;
 
-    private Particle[] parts = new Particle[PARTICLE_MAX];
+    /** Counting starts from this number */
+    private static int EXPLODE_COUNTDOWN_START;
+    /** Bomb explodes when it's 0 */
+    private static int EXPLODE_COUNTDOWN;
 
-    private int [] aniX = {0, 2 ,-1 -3, 0, 1,-1,-3, 2};
-    private int [] aniY = {0, 1, -2, 0, 2,-1, 2, 1, 1};
-    private int [] aniR = {0, 0, -1, 1, 0, 1,-1, 0,-1};
 
+    /** How much we are moving - this makes shaking effect */
+    private int[] shakeX = {0, 2, -1, -3, 0, -2, 1, 3, 0};
+    private int[] shakeY = {0, 1, -2, -1, 2,-1, 2, 0, -1};
+    /** Counter for shakeX/Y array */
+    private int shakeCount = 0;
+
+    private Spark[] sparks = new Spark[SPARKS_MAX];
 
     private BufferedImage background;
 
     private ArrayList<Tile> tiles;
     private Tile player;
 
-    private int bombCnt;
     private Tile bomb;
     private Tile countdownTile;
-
+    private int bombX;
+    private int bombY;
 
     private static Game instance;
 
@@ -53,14 +58,7 @@ public class Game extends GameFrame {
     private double radius = 10.0;
     private double gravity = -0.1;
 
-    private static int bombW = 30;
-    private static int bombH = 30;
-
-
     private static int scalingFactor = 3;
-
-    private static int explodeCountdown = 300;
-    private static int explodeLimit = 300;
 
     private int windowWidth;
     private int windowHeight;
@@ -77,11 +75,10 @@ public class Game extends GameFrame {
         this.tiles = new ArrayList<>();
         this.background = Util.loadImage("bg/BG.png");
 
+        for(int i = 0; i < SPARKS_MAX; ++i)
+            sparks[i] = new Spark();
 
-        for(int i = 0; i < PARTICLE_MAX; ++i)
-            parts[i] = new Particle();
-
-
+        EXPLODE_COUNTDOWN = EXPLODE_COUNTDOWN_START = UPDATE_RATE * 5; // because we are counting down from 5
     }
 
     public static Game getInstance() {
@@ -94,7 +91,6 @@ public class Game extends GameFrame {
                 }
             }
         }
-
         return instance;
     }
 
@@ -127,7 +123,7 @@ public class Game extends GameFrame {
     @Override
     public void handleWindowInit() {
         loadTiles();
-        setUpdateRate(90);
+        setUpdateRate(UPDATE_RATE);
         startThread();
     }
 
@@ -138,24 +134,31 @@ public class Game extends GameFrame {
         for (Tile tile : this.tiles) {
             g.drawImage(tile.getImage(), tile.getX(), tile.getY(), tile.getWidth(), tile.getHeight(), null);
         }
-        if (bomb != null) {
-            g.drawImage(bomb.getImage(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getHeight(), null);
-            if(explodeCountdown < explodeLimit){
-                g.drawImage(countdownTile.getImage(), countdownTile.getX(), countdownTile.getY(), countdownTile.getWidth(), countdownTile.getHeight(), null);
+
+        player.render(g);
+
+        if (bombExists()) {
+            renderBomb(g);
+            if(EXPLODE_COUNTDOWN < EXPLODE_COUNTDOWN_START) {
+                renderNumber(g);
             }
         }
 
-        //varnice
-        g.setColor(Color.YELLOW);
-
-        for(Particle p : parts)
-        {
-            if(p.life <= 0) continue;
-
-            g.drawLine((int)(p.posX - p.dX), (int)(p.posY - p.dY), (int)p.posX, (int)p.posY);
+        for(Spark spark : sparks) {
+            spark.render(g);
         }
-        player.render(g);
+    }
 
+    private boolean bombExists() {
+        return bomb != null;
+    }
+
+    private void renderBomb(Graphics2D g) {
+        g.drawImage(bomb.getImage(), bomb.getX(), bomb.getY(), bomb.getWidth(), bomb.getHeight(), null);
+    }
+
+    private void renderNumber(Graphics2D g) {
+        g.drawImage(countdownTile.getImage(), countdownTile.getX(), countdownTile.getY(), countdownTile.getWidth(), countdownTile.getHeight(), null);
     }
 
     @Override
@@ -165,13 +168,15 @@ public class Game extends GameFrame {
         if (isMouseButtonDown(GFMouseButton.Left)) {
             if (bomb == null) {
                 BOMB_GROWING = true;
-                bombCnt = 1;
-                bomb = new Tile("Tiles/bomb.png", getMouseX() - bombW / 2, getMouseY() - bombH / 2, bombW, bombH, "b");
+                BOMB_CHANGING_COUNT = 1;
+                bomb = new Tile("Tiles/bomb.png",getMouseX() - DEFAULT_BOMB_WIDTH / 2,getMouseY() - DEFAULT_BOMB_HEIGHT / 2, DEFAULT_BOMB_WIDTH, DEFAULT_BOMB_HEIGHT, "b");
+                bombX = getMouseX();
+                bombY = getMouseY();
             }
-            bombCnt++;
+            BOMB_CHANGING_COUNT++;
 
-            if(bombCnt > BOMB_CHANGING_LIMIT) {
-                bombCnt = 1;
+            if(BOMB_CHANGING_COUNT > BOMB_CHANGING_LIMIT) {
+                BOMB_CHANGING_COUNT = 1;
                 if(BOMB_GROWING) {
                     BOMB_GROWING = false;
                 } else {
@@ -179,7 +184,7 @@ public class Game extends GameFrame {
                 }
             }
 
-            if (timeToChange(bombCnt)) {
+            if (timeToChange(BOMB_CHANGING_COUNT)) {
                 if(BOMB_GROWING) {
                     bomb.setHeight(bomb.getHeight() + BOMB_CHANGING_FACTOR);
                     bomb.setWidth(bomb.getWidth() + BOMB_CHANGING_FACTOR);
@@ -195,72 +200,112 @@ public class Game extends GameFrame {
 
 
         } else if (bomb != null) {
-            genEx(bomb.getX() + bomb.getHeight() / 1.65f, bomb.getY(), 4.0f, bomb.getHeight() / 3, 3);
-            explodeCountdown--;
-            if(explodeCountdown == 0) {
+            EXPLODE_COUNTDOWN--;
+            generateSparks(bomb.getX() + bomb.getHeight() / 1.65f, bomb.getY(), 4.0f, bomb.getHeight() / 4, 8 - EXPLODE_COUNTDOWN / UPDATE_RATE );
+            if(timeToExplode()) {
                 handleBoom();
-                bomb = null;
-                explodeCountdown = explodeLimit;
             } else {
-                int numberToShow = explodeCountdown / 60;
-                int countdownTileX = getX() + getWidth() / 2 - bomb.getWidth()/(2*scalingFactor) ;
-                int countdownTileY = getY()+ getHeight()/ 2 - bomb.getHeight()/(2*scalingFactor);
-                int countdownTileW = bomb.getWidth()/scalingFactor;
-                int countdownTileH = bomb.getHeight()/scalingFactor;
-                switch (numberToShow) {
-                    case 0:
-                        if(countdownTile == null || !countdownTile.getType().equals("1")) {
-                            countdownTile = new Tile("Tiles/number1.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "1");
-                        }
-                        break;
-                    case 1:
-                        if(countdownTile == null || !countdownTile.getType().equals("2")) {
-                            countdownTile = new Tile("Tiles/number2.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "2");
-                        }
-                        break;
-                    case 2:
-                        if(countdownTile == null || !countdownTile.getType().equals("3")) {
-                            countdownTile = new Tile("Tiles/number3.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "3");
-                        }
-                        break;
-                    case 3:
-                        if(countdownTile == null || !countdownTile.getType().equals("4")) {
-                            countdownTile = new Tile("Tiles/number4.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "4");
-                        }
-                        break;
-                    default:
-                        if(countdownTile == null || !countdownTile.getType().equals("5")) {
-                            countdownTile = new Tile("Tiles/number5.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "5");
-                        }
-                }
-                if(explodeCountdown % 5 == 0) {
-                    countdownTile.setX(countdownTile.getX() - BOMB_CHANGING_FACTOR / 2);
-                    countdownTile.setY(countdownTile.getY() - BOMB_CHANGING_FACTOR / 2);
-                    countdownTile.setWidth(countdownTile.getWidth() + BOMB_CHANGING_FACTOR);
-                    countdownTile.setHeight(countdownTile.getHeight() + BOMB_CHANGING_FACTOR);
-                }
-
+                handleCountdown();
             }
         }
 
-        for(Particle p : parts)
-        {
-            if(p.life <= 0) continue;
-
-            p.life--;
-            p.posX += p.dX;
-            p.posY += p.dY;
-            p.dX *= 0.99f;
-            p.dY *= 0.99f;
-            p.dY += 0.1f;
-
+        for(Spark spark : sparks) {
+             spark.update();
         }
 
         handleMovement();
+
         player.update();
     }
 
 
+    private boolean timeToExplode() {
+        return EXPLODE_COUNTDOWN == 0;
+    }
+
+    private void handleCountdown() {
+        int countdownTileW = (int)(bomb.getWidth() * 0.3);
+        int countdownTileH = (int)(bomb.getHeight() * 0.3);
+        int countdownTileX = bomb.getX() + bomb.getWidth() / 2 - countdownTileW ;
+        int countdownTileY = bomb.getY()+ bomb.getHeight() / 2 - countdownTileH;
+
+        int currentNumber = EXPLODE_COUNTDOWN / UPDATE_RATE + 1;
+        switch (currentNumber) {
+            case 1:
+                if(countdownTile == null || !countdownTile.getType().equals("1")) {
+                    countdownTile = new Tile("Tiles/number1.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "1");
+                }
+                shakeBomb(currentNumber);
+                break;
+            case 2:
+                if(countdownTile == null || !countdownTile.getType().equals("2")) {
+                    countdownTile = new Tile("Tiles/number2.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "2");
+                }
+                shakeBomb(currentNumber);
+                break;
+            case 3:
+                if(countdownTile == null || !countdownTile.getType().equals("3")) {
+                    countdownTile = new Tile("Tiles/number3.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "3");
+                }
+                shakeBomb(currentNumber);
+                break;
+            case 4:
+                if(countdownTile == null || !countdownTile.getType().equals("4")) {
+                    countdownTile = new Tile("Tiles/number4.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "4");
+                }
+                break;
+            default:
+                if(countdownTile == null || !countdownTile.getType().equals("5")) {
+                    countdownTile = new Tile("Tiles/number5.png", countdownTileX, countdownTileY , countdownTileW, countdownTileH, "5");
+                }
+        }
+
+        if(EXPLODE_COUNTDOWN % 3 == 0) {
+            countdownTile.setWidth(countdownTile.getWidth() + 1);
+            countdownTile.setHeight(countdownTile.getHeight() + 1);
+            countdownTile.setX(bomb.getX() + bomb.getWidth() / 2 - countdownTile.getWidth() / 2);
+            countdownTile.setY(bomb.getY() + bomb.getHeight() / 2 - countdownTile.getHeight() / 2);
+        }
+    }
+
+    /**
+     * Bomb is shaking only if current number is 3 or less.
+     * As currentNumber is lower, the bomb shaking is more frequent,
+     * so if currentNumber is 3 it will shake every 4th frame, and if currentNumber is 2 it will shake every third frame...
+     * On numbers 2 and 1 we are adding additional moving so it looks like bomb is shaking  more
+     *
+     * @param currentNumber - number on the bomb
+     */
+    private void shakeBomb(int currentNumber) {
+        boolean moved = false;
+        switch (currentNumber) {
+            case 1:
+                if (EXPLODE_COUNTDOWN % 2 == 0) {
+                    bomb.setX(bomb.getX() + shakeX[shakeCount] * 2);
+                    bomb.setY(bomb.getY() + shakeY[shakeCount] * 2);
+                    moved = true;
+                }
+                break;
+            case 2:
+                if (EXPLODE_COUNTDOWN % 3 == 0) {
+                    bomb.setX(bomb.getX() + shakeX[shakeCount] * 2);
+                    bomb.setY(bomb.getY() + shakeY[shakeCount] * 2);
+                    moved = true;
+                }
+                break;
+            case 3:
+                if (EXPLODE_COUNTDOWN % 4 == 0) {
+                    bomb.setX(bomb.getX() + shakeX[shakeCount] );
+                    bomb.setY(bomb.getY() + shakeY[shakeCount] );
+                    moved = true;
+                }
+                break;
+        }
+        if(moved) {
+            shakeCount++;
+            if(shakeCount == shakeX.length) shakeCount = 0;
+        }
+    }
 
     /**
      * We are changing bomb size every 10th frame
@@ -272,19 +317,19 @@ public class Game extends GameFrame {
     }
 
 
-    private void genEx(float cX, float cY, float radius, int life, int count)
+    private void generateSparks(float cX, float cY, float radius, int life, int count)
     {
-        for(Particle p : parts)
+        for(Spark spark : sparks)
         {
-            if(p.life <= 0)
+            if(spark.life <= 0)
             {
-                p.life = (int)(Math.random() * life * 0.5) + life / 2;
-                p.posX = cX;
-                p.posY = cY;
+                spark.life = (int)(Math.random() * life * 0.5) + life / 2;
+                spark.posX = cX;
+                spark.posY = cY;
                 double angle = Math.random() * Math.PI * 2.0;
                 double speed = Math.random() * radius;
-                p.dX = (float)(Math.cos(angle) * speed);
-                p.dY = (float)(Math.sin(angle) * speed);
+                spark.dX = (float)(Math.cos(angle) * speed);
+                spark.dY = (float)(Math.sin(angle) * speed);
 
                 count--;
                 if(count <= 0) return;
@@ -323,15 +368,17 @@ public class Game extends GameFrame {
     }
 
     public void handleBoom() {
+
         setAngle();
         setSpeed();
-
         ((Player)player).enableRotation((getMouseX()>player.getX())?Player.LEFT_ROTATION_DIRECTION:Player.RIGHT_ROTATION_DIRECTION);
+        EXPLODE_COUNTDOWN = EXPLODE_COUNTDOWN_START;
+        bomb = null;
     }
 
     public void setAngle() {
 
-        angle = Math.toDegrees(Math.atan2(player.getY() + (player.getHeight() / 2) - (bomb.getY() + bombH / 2), player.getX() + (player.getWidth() / 2) - (bomb.getX() + bombW / 2)));
+        angle = Math.toDegrees(Math.atan2(player.getY() + (player.getHeight() / 2) - (bombY), player.getX() + (player.getWidth() / 2) - (bombX)));
 
         if (angle < 0)
             angle += 360;
