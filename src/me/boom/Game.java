@@ -47,6 +47,8 @@ public class Game extends GameFrame {
 
     private Tile bomb;
     private Tile countdownTile;
+    private int bombX;
+    private int bombY;
 
     private static Game instance;
 
@@ -168,6 +170,8 @@ public class Game extends GameFrame {
                 BOMB_GROWING = true;
                 BOMB_CHANGING_COUNT = 1;
                 bomb = new Tile("Tiles/bomb.png",getMouseX() - DEFAULT_BOMB_WIDTH / 2,getMouseY() - DEFAULT_BOMB_HEIGHT / 2, DEFAULT_BOMB_WIDTH, DEFAULT_BOMB_HEIGHT, "b");
+                bombX = getMouseX();
+                bombY = getMouseY();
             }
             BOMB_CHANGING_COUNT++;
 
@@ -364,6 +368,7 @@ public class Game extends GameFrame {
     }
 
     public void handleBoom() {
+
         setAngle();
         setSpeed();
         ((Player)player).enableRotation((getMouseX()>player.getX())?Player.LEFT_ROTATION_DIRECTION:Player.RIGHT_ROTATION_DIRECTION);
@@ -373,7 +378,7 @@ public class Game extends GameFrame {
 
     public void setAngle() {
 
-        angle = Math.toDegrees(Math.atan2(player.getY() + (player.getHeight() / 2) - (bomb.getY() + DEFAULT_BOMB_HEIGHT / 2), player.getX() + (player.getWidth() / 2) - (bomb.getX() + DEFAULT_BOMB_WIDTH / 2)));
+        angle = Math.toDegrees(Math.atan2(player.getY() + (player.getHeight() / 2) - (bombY), player.getX() + (player.getWidth() / 2) - (bombX)));
 
         if (angle < 0)
             angle += 360;
