@@ -106,7 +106,7 @@ public class Player extends Tile {
 
     public void enableRotation(int leftOrRightDirection) {
         this.enabledRotation = true;
-        this.rotationSpeed = DEFAULT_ROTATION_SPEED;
+        this.rotationSpeed = Player.DEFAULT_ROTATION_SPEED;
         this.rotationDirection = leftOrRightDirection;
     }
 
