@@ -1,9 +1,13 @@
 package me.boom;
 
 import rafgfxlib.GameFrame;
+import rafgfxlib.Util;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 
 public class Player extends Tile {
@@ -11,6 +15,10 @@ public class Player extends Tile {
     public static final float DEFAULT_ROTATION_SPEED = 0.215f;
     public static final int LEFT_ROTATION_DIRECTION = 1;
     public static final int RIGHT_ROTATION_DIRECTION = 2;
+
+    public static final int WARNING_COUNTER_MAX = 60;
+    private int currentWarningCounter = 0;
+    private BufferedImage warningImage;
 
     private int defaultX;
     private int defaultY;
@@ -42,7 +50,30 @@ public class Player extends Tile {
             hearts.add(heart);
         }
 
+        loadWarningImage();
+    }
 
+    private void loadWarningImage() {
+        int rgb[] = new int[4];
+
+        WritableRaster source = super.getImage().getRaster();
+        WritableRaster target = Util.createRaster(super.getImage().getWidth(),super.getImage().getHeight(),true);
+
+        for(int y=0;y<super.getImage().getHeight();y++) {
+            for(int x=0;x<super.getImage().getWidth();x++) {
+                source.getPixel(x,y,rgb);
+                if(rgb[3] != 0) {
+
+                    rgb[1] = 0;
+                    rgb[2] = 0;
+                    rgb[3] = 255;
+                }
+
+                target.setPixel(x,y,rgb);
+            }
+        }
+
+        this.warningImage = Util.rasterToImage(target);
     }
 
     public void update() {
@@ -52,6 +83,10 @@ public class Player extends Tile {
 
     public void render(Graphics2D g) {
 
+        if(currentWarningCounter > 0) {
+            --currentWarningCounter;
+        }
+
 
         for (Tile heart:hearts) {
             g.drawImage(heart.getImage(), heart.getX(), heart.getY(), heart.getWidth(), heart.getHeight(), null);
@@ -59,7 +94,6 @@ public class Player extends Tile {
 
 
         g.drawImage(this.getImage().getScaledInstance(this.getWidth(),this.getHeight(),Image.SCALE_DEFAULT), playerTransformation, null);
-//        g.drawImage(this.getImage(), this.getX(), this.getY(), this.getWidth(), this.getHeight(), null);
 
 
     }
@@ -120,4 +154,22 @@ public class Player extends Tile {
     public boolean isDeath() {
         return isDeath;
     }
+
+    public void hit() {
+        currentWarningCounter = WARNING_COUNTER_MAX;
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        BufferedImage image = super.getImage();
+
+        if(currentWarningCounter>0) {
+
+            return warningImage;
+        }
+
+
+        return image;
+    }
+
 }

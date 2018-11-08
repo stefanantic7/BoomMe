@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Game extends GameFrame {
 
     private static final int UPDATE_RATE = 90;
-
+    private static final int LIVES_COUNTER = 3;
 
     private static final int SPARKS_MAX = 350;
 
@@ -109,7 +109,7 @@ public class Game extends GameFrame {
 
                 if (bitMap[i][j].equals("#")) {
                     Tile tile = new Player("Tiles/" + "player" + ".png",
-                            j * width, i * height, width, height, 1);
+                            j * width, i * height, width, height, LIVES_COUNTER);
                     player = tile;
                 } else {
 
@@ -174,7 +174,7 @@ public class Game extends GameFrame {
         }
     }
 
-    private boolean bombExists() {
+    public boolean bombExists() {
         return bomb != null;
     }
 
@@ -232,6 +232,7 @@ public class Game extends GameFrame {
                 EXPLODE_COUNTDOWN--;
                 generateSparks(bomb.getX() + bomb.getHeight() / 1.65f, bomb.getY(), 4.0f, bomb.getHeight() / 4, 8 - EXPLODE_COUNTDOWN / UPDATE_RATE );
                 if(timeToExplode()) {
+                    ((Player) player).hit();
                     handleBoom();
                 } else {
                     handleCountdown();
@@ -466,9 +467,8 @@ public class Game extends GameFrame {
         double dX = (float) (Math.cos(angle) * speedX);
         double dY = (float) (Math.sin(angle) * speedY);
 
+
         if (!handleColision(dX, dY)) {
-
-
             player.setX((int) (player.getX() + dX));
             player.setY((int) (player.getY() + dY));
         }
