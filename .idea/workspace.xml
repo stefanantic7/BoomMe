@@ -1,61 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e19b7510-5803-49bc-abb1-4a4ecf1a35bd" name="Default Changelist" comment="Destroy window tile by tile when player dies">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/boom/Game.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/boom/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/boom/Player.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/boom/Spark.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/boom/Tile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/maps/MapLoader.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/moj/Zgrade.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg2016_v04/V04_1_GameFrame.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg2016_v04/V04_2_Pong.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/AnimatedSpriteDemo$AnimatedEntity.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/AnimatedSpriteDemo$SpriteSheet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/AnimatedSpriteDemo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/BoomMe$Tile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/BoomMe.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Distorzija.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Izometrija$Tile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Izometrija.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Particles_1$Particle.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Particles_1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Particles_2$Particle.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Particles_2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/StarField$AnimatedEntity.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/StarField$SpriteSheet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/StarField$Star.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/StarField.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Tilemap$Tile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_examples/Tilemap.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_statetest/FirstState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_statetest/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_statetest/SecondState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_statetest/Transition$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_statetest/Transition$TransitionType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/rg_statetest/Transition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/moj/Zgrade.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg2016_v04/V04_1_GameFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg2016_v04/V04_2_Pong.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/AnimatedSpriteDemo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/BoomMe.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/Distorzija.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/Izometrija.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/Particles_1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/Particles_2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/StarField.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_examples/Tilemap.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_statetest/FirstState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_statetest/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_statetest/SecondState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rg_statetest/Transition.java" beforeDir="false" />
+    <list default="true" id="e19b7510-5803-49bc-abb1-4a4ecf1a35bd" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -64,13 +11,74 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-579259965">
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="2" />
+          <entry key="xml" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="2" />
+          <entry key="XML" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="txt" value="17" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="PLAIN_TEXT" value="17" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
               <caret line="2" selection-start-line="2" selection-end-line="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="44" column="35" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/me/boom/Game.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/me/boom/Player.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="376">
+              <caret line="113" column="5" lean-forward="true" selection-start-line="113" selection-start-column="5" selection-end-line="113" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#3327#3328#0" expanded="true" />
+                <element signature="e#3357#3358#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -83,6 +91,23 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>get</find>
+      <find>frame</find>
+      <find>return myf</find>
+      <find>exit</find>
+      <find>destro</find>
+      <find>interse</find>
+      <find>new spa</find>
+      <find>.pos</find>
+      <find>generate</find>
+      <find>new pl</find>
+      <find>new spar</find>
+      <find>spark</find>
+      <find>main</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -145,7 +170,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541674883766" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1541675159414" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -190,12 +215,12 @@
       <option name="presentableId" value="Default" />
       <updated>1541458910907</updated>
     </task>
-    <task id="LOCAL-00001" summary="Game instance is singleton. Changed structure for updating and rendering tiles. Revive death player to default points.">
-      <created>1541462902577</created>
+    <task id="LOCAL-00001" summary="Added gitignore">
+      <created>1541674924801</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1541462902577</updated>
+      <updated>1541674924801</updated>
     </task>
     <task id="LOCAL-00002" summary="Lives for player">
       <created>1541466322699</created>
@@ -232,6 +257,7 @@
       <option name="project" value="LOCAL" />
       <updated>1541633956481</updated>
     </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -268,5 +294,47 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added gitignore" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="44" column="35" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/boom/Game.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/boom/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="376">
+          <caret line="113" column="5" lean-forward="true" selection-start-line="113" selection-start-column="5" selection-end-line="113" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3327#3328#0" expanded="true" />
+            <element signature="e#3357#3358#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
