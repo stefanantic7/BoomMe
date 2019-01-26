@@ -28,4 +28,14 @@ public class Spark {
 
         }
     }
+
+    public void reGenerate(float x, float y, float radius, int life) {
+        this.life = (int) (Math.random() * life * 0.5) + life / 2;
+        this.posX = x;
+        this.posY = y;
+        double angle = Math.random() * Math.PI * 2.0;
+        double speed = Math.random() * radius;
+        this.dX = (float) (Math.cos(angle) * speed);
+        this.dY = (float) (Math.sin(angle) * speed);
+    }
 }

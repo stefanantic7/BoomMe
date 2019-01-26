@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 public class Tile
 {
-
     private BufferedImage image = null;
 
     private int x;
@@ -17,10 +16,10 @@ public class Tile
 
     private Shape shape;
 
-    private String type;
+    private TileType type;
 
 
-    public Tile(String fileName, int x, int y, int width, int height, String type)
+    public Tile(String fileName, int x, int y, int width, int height, TileType type)
     {
         this.image = Util.loadImage(fileName);
 
@@ -37,6 +36,11 @@ public class Tile
         {
             System.out.println("Fail at \"" + fileName + "\"");
         }
+    }
+
+    public Tile(String fileName, int x, int y, int width, int height)
+    {
+        this(fileName, x, y, width, height, TileType.NONE);
     }
 
     public BufferedImage getImage() {
@@ -79,11 +83,11 @@ public class Tile
         this.height = height;
     }
 
-    public String getType() {
+    public TileType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TileType type) {
         this.type = type;
     }
 

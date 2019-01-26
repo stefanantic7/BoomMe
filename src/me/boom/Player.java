@@ -35,7 +35,7 @@ public class Player extends Tile {
     private AffineTransform playerTransformation;
 
     public Player(String fileName, int x, int y, int width, int height, int livesCounter) {
-        super(fileName, x, y, width, height, "p");
+        super(fileName, x, y, width, height, TileType.PLAYER);
         this.defaultX = x;
         this.defaultY = y;
         this.rotationSpeed = DEFAULT_ROTATION_SPEED;
@@ -46,7 +46,7 @@ public class Player extends Tile {
 
         this.hearts = new ArrayList<>();
         for (int i = 0; i < livesCounter; i++) {
-            Tile heart = new Tile("Tiles/heart.png",i*25, 0, 25, 25, "h");
+            Tile heart = new Tile("Tiles/heart.png",i*25, 0, 25, 25, TileType.NONE);
             hearts.add(heart);
         }
 
