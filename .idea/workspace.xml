@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e19b7510-5803-49bc-abb1-4a4ecf1a35bd" name="Default Changelist" comment="If player gets hit, draw him in red.">
-      <change afterPath="$PROJECT_DIR$/src/me/boom/Bomb.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/me/boom/TileType.java" afterDir="false" />
+    <list default="true" id="e19b7510-5803-49bc-abb1-4a4ecf1a35bd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/boom/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/me/boom/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/me/boom/Spark.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/me/boom/Spark.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/boom/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/boom/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/boom/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/boom/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/boom/Spark.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/boom/Spark.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/boom/Tile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/boom/Tile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/me/boom/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/me/boom/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/me/boom/Tile.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/me/boom/Tile.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/boom/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="276">
-              <caret line="113" column="84" selection-start-line="113" selection-start-column="84" selection-end-line="113" selection-end-column="84" />
+            <state relative-caret-position="241">
+              <caret line="166" column="28" lean-forward="true" selection-start-line="166" selection-start-column="28" selection-end-line="166" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#5153#5154#0" expanded="true" />
@@ -252,7 +246,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1548521779961" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1548521874789" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
@@ -298,7 +292,7 @@
       <option name="presentableId" value="Default" />
       <updated>1541458910907</updated>
       <workItem from="1548466388871" duration="2611000" />
-      <workItem from="1548509254901" duration="9432000" />
+      <workItem from="1548509254901" duration="9531000" />
     </task>
     <task id="LOCAL-00001" summary="Added gitignore">
       <created>1541674924801</created>
@@ -321,12 +315,12 @@
       <option name="project" value="LOCAL" />
       <updated>1541707883679</updated>
     </task>
-    <task id="LOCAL-00004" summary="Rotation on bomb exploding">
-      <created>1541548134848</created>
+    <task id="LOCAL-00004" summary="Separate bomb logic into Bomb class.">
+      <created>1548521849224</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1541548134848</updated>
+      <updated>1548521849224</updated>
     </task>
     <task id="LOCAL-00005" summary="Rotation on bomb exploding">
       <created>1541621715478</created>
@@ -342,17 +336,16 @@
       <option name="project" value="LOCAL" />
       <updated>1541633956481</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12043000" />
+    <option name="totallyTimeSpent" value="12142000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="954" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26251528" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26251528" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -361,7 +354,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32946634" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32946634" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32946634" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39975846" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -392,7 +385,8 @@
     <MESSAGE value="Added gitignore" />
     <MESSAGE value="Remove old files" />
     <MESSAGE value="If player gets hit, draw him in red." />
-    <option name="LAST_COMMIT_MESSAGE" value="If player gets hit, draw him in red." />
+    <MESSAGE value="Separate bomb logic into Bomb class." />
+    <option name="LAST_COMMIT_MESSAGE" value="Separate bomb logic into Bomb class." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
@@ -527,8 +521,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/boom/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="113" column="84" selection-start-line="113" selection-start-column="84" selection-end-line="113" selection-end-column="84" />
+        <state relative-caret-position="241">
+          <caret line="166" column="28" lean-forward="true" selection-start-line="166" selection-start-column="28" selection-end-line="166" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#5153#5154#0" expanded="true" />

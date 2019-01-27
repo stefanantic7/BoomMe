@@ -15,31 +15,8 @@ public class Game extends GameFrame {
     private static final int UPDATE_RATE = 90;
     private static final int LIVES_COUNTER = 3;
 
-    private static final int SPARKS_MAX = 350;
-
     private static int DEFAULT_BOMB_WIDTH = 30;
     private static int DEFAULT_BOMB_HEIGHT = 30;
-    /**
-     * Determinate whether bomb should increase or decrease it's size
-     */
-    private static boolean BOMB_GROWING = true;
-    /**
-     * How much we are increasing/decreasing bomb size
-     */
-    private static int BOMB_CHANGING_FACTOR = 10;
-    private static int BOMB_CHANGING_LIMIT = 50;
-//    private static int BOMB_CHANGING_COUNT;
-
-    /**
-     * Counting starts from this number
-     */
-//    private static int EXPLODE_COUNTDOWN_START;
-    /**
-     * Bomb explodes when it's 0
-     */
-//    private static int EXPLODE_COUNTDOWN;
-
-
 
     private BufferedImage background;
 
@@ -176,7 +153,6 @@ public class Game extends GameFrame {
             // na klik se pojavljuje bomba
             if (isMouseButtonDown(GFMouseButton.Left)) {
                 if (bomb == null) {
-                    BOMB_GROWING = true;
                     bomb = new Bomb("Tiles/bomb.png", getMouseX() - DEFAULT_BOMB_WIDTH / 2, getMouseY() - DEFAULT_BOMB_HEIGHT / 2, DEFAULT_BOMB_WIDTH, DEFAULT_BOMB_HEIGHT, 1, UPDATE_RATE);
                     bombX = getMouseX();
                     bombY = getMouseY();
